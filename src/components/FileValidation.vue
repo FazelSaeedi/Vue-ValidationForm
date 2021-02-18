@@ -4,10 +4,10 @@
     <div class="card-body">
       <form>
         <div class="form-row">
-          <div class="form-group col-md-6">
+          <div class="form-group  col-md-6">
             <label>First Name</label>
             <input type="text" class="form-control" v-model.trim="$v.firstname.$model" :class="{
-                    'is-invalid' :$v.firstname.$error , 'is-valida' : !$v.firstname.$invalid }">
+                    'is-invalid' :$v.firstname.$error , 'is-valid' : !$v.firstname.$invalid }">
             <div class="valid-feedback">Your first name is valid!</div>
             <div class="invalid-feedback">
               <span v-if="!$v.firstname.required">First name is required</span>
@@ -23,7 +23,7 @@
           <div class="form-group col-md-6">
             <label>Last Name</label>
             <input type="text" class="form-control" v-model.trim="$v.lastname.$model" :class="{
-                    'is-invalid' :$v.lastname.$error , 'is-valida' : !$v.lastname.$invalid }">
+                    'is-invalid' :$v.lastname.$error , 'is-valid' : !$v.lastname.$invalid }">
             <div class="valid-feedback">Your Last name is valid!</div>
             <div class="invalid-feedback">
               <span v-if="!$v.lastname.required">Last name is required</span>
@@ -39,7 +39,7 @@
           <div class="form-group col-md-12">
             <label>age</label>
             <input type="number" class="form-control" v-model.number.lazy="$v.age.$model" :class="{
-                    'is-invalid' :$v.age.$error , 'is-valida' : !$v.age.$invalid }">
+                    'is-invalid' :$v.age.$error , 'is-valid' : !$v.age.$invalid }">
             <div class="valid-feedback">Your age name is valid!</div>
             <div class="invalid-feedback">
                 <span v-if="!$v.age.between">Must be between {{$v.age.$params.between.min}} and {{$v.age.$params.between.max}}</span>
