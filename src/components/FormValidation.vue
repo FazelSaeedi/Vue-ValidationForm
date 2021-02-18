@@ -45,6 +45,31 @@
                 <span v-if="!$v.age.between">Must be between {{$v.age.$params.between.min}} and {{$v.age.$params.between.max}}</span>
             </div>
           </div>
+
+          <div class="form-group col-md-12">
+            <label>Username</label>
+            <input type="text" class="form-control" v-model.trim="$v.username.$model" :class="{
+                    'is-invalid' :$v.username.$error , 'is-valid' : !$v.username.$invalid }">
+            <div class="valid-feedback">Your username name is valid!</div>
+            <div class="invalid-feedback">
+              <span v-if="!$v.username.required">Username is required.</span>
+              <span v-if="!$v.username.isUnique">this username is already registerd.</span>
+            </div>
+          </div>
+
+
+          <div class="form-group col-md-12">
+            <label>Email</label>
+            <input type="email" class="form-control" v-model.trim="$v.email.$model" :class="{
+                    'is-invalid' :$v.email.$error , 'is-valid' : !$v.email.$invalid }">
+            <div class="valid-feedback">Your Email name is valid!</div>
+            <div class="invalid-feedback">
+              <span v-if="!$v.username.email">Email is required.</span>
+              <span v-if="!$v.username.email">this Email is already registerd.</span>
+            </div>
+          </div>
+
+
         </div>
       </form>
     </div>
@@ -52,15 +77,17 @@
 </template>
 
 <script>
-import {required, minLength, maxLength, between} from 'vuelidate/lib/validators'
+import {required, minLength, maxLength, between , email } from 'vuelidate/lib/validators'
 
 export default {
-  name: "FileValidation",
+  name: "FormValidation",
   data() {
     return {
       'firstname': '',
       'lastname': '',
       'age': 0,
+      'username' : '' ,
+      'email' : ''
     }
   },
   validations: {
@@ -77,6 +104,35 @@ export default {
     age: {
       between: between(15, 40)
     },
+    username : {
+      required ,
+      isUnique (value) {
+         if (value === '') return true
+
+         return new Promise((resolve) => {
+           setTimeout(() => {
+             resolve(typeof value === 'string' && value.length % 2 !== 0)
+           } , 350 + Math.random() * 300)
+         })
+      }
+    },
+    email : {
+      required ,
+      email ,
+      isUnique (value) {
+        if (value === '') return true
+
+        var email_regex = /^(([^<>()[\]\\.,;:\s@"]+(\.[^<>()[\]\\.,;:\s@"]+)*)|(".+"))@((\[[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}\])|(([a-zA-Z\-0-9]+\.)+[a-zA-Z]{2,}))$/;
+
+
+
+        return new Promise((resolve) => {
+          setTimeout(() => {
+            resolve(email_regex.test(value))
+          } , 350 + Math.random() * 300)
+        })
+      }
+    }
   }
 }
 </script>
