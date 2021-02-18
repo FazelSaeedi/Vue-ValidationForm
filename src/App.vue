@@ -1,28 +1,21 @@
 <template>
-  <div id="app">
+  <div id="app" class="container mt-5 mb-5" style="width: 500px">
     <img alt="Vue logo" src="./assets/logo.png">
-    <HelloWorld msg="Welcome to Your Vue.js App"/>
+    <FileValidation />
   </div>
 </template>
 
 <script>
-import HelloWorld from './components/HelloWorld.vue'
+import FileValidation from "@/components/FileValidation";
 
 export default {
   name: 'App',
   components: {
-    HelloWorld
+    FileValidation
   }
 }
 </script>
 
 <style>
-#app {
-  font-family: Avenir, Helvetica, Arial, sans-serif;
-  -webkit-font-smoothing: antialiased;
-  -moz-osx-font-smoothing: grayscale;
-  text-align: center;
-  color: #2c3e50;
-  margin-top: 60px;
-}
+
 </style>
