@@ -64,10 +64,38 @@
                     'is-invalid' :$v.email.$error , 'is-valid' : !$v.email.$invalid }">
             <div class="valid-feedback">Your Email name is valid!</div>
             <div class="invalid-feedback">
-              <span v-if="!$v.username.email">Email is required.</span>
-              <span v-if="!$v.username.email">this Email is already registerd.</span>
+              <span v-if="!$v.email.required">Email is required.</span>
+              <span v-if="!$v.email.isUnique">this Email is already registerd.</span>
             </div>
           </div>
+
+          <div class="form-group col-md-12">
+            <label>Password</label>
+            <input type="password" id="password" class="form-control" v-model.trim="$v.password.$model" :class="{
+                    'is-invalid' :$v.password.$error , 'is-valid' : !$v.password.$invalid }">
+            <div class="valid-feedback">Your Password name is valid!</div>
+            <div class="invalid-feedback">
+              <span v-if="!$v.password.required">Password is required.</span>
+              <span v-if="!$v.password.minLength">Your Password must be {{ $v.password.$params.minLength.min }}</span>
+            </div>
+          </div>
+
+          <div class="form-group form-check">
+            <input type="checkbox" id="showpassword" class="form-check-input" @click="toggleShowPassword" v-model="showpassword">
+            <label class="form-check-label" for="showpassword"></label>Show Password
+          </div>
+
+          <div class="form-group col-md-12">
+            <label>Repeat Password</label>
+            <input type="password"  class="form-control" v-model.trim="$v.repeatpassword.$model" :class="{
+                    'is-invalid' :$v.repeatpassword.$error , 'is-valid' : (password != '') ?
+                    !$v.repeatpassword.$invalid : '' }">
+            <div class="valid-feedback">Your Password is identical!</div>
+            <div class="invalid-feedback">
+              <span v-if="!$v.repeatpassword.sameAsPassword">Password must be identical.</span>
+            </div>
+          </div>
+
 
 
         </div>
@@ -77,7 +105,8 @@
 </template>
 
 <script>
-import {required, minLength, maxLength, between , email } from 'vuelidate/lib/validators'
+import {required, minLength, maxLength, between , email , sameAs } from 'vuelidate/lib/validators'
+
 
 export default {
   name: "FormValidation",
@@ -87,7 +116,10 @@ export default {
       'lastname': '',
       'age': 0,
       'username' : '' ,
-      'email' : ''
+      'email' : '' ,
+      'password' : '' ,
+      'repeatpassword' : '',
+      'showpassword' : false
     }
   },
   validations: {
@@ -104,35 +136,54 @@ export default {
     age: {
       between: between(15, 40)
     },
-    username : {
-      required ,
-      isUnique (value) {
-         if (value === '') return true
+    username: {
+      required,
+      isUnique(value) {
+        if (value === '') return true
 
-         return new Promise((resolve) => {
-           setTimeout(() => {
-             resolve(typeof value === 'string' && value.length % 2 !== 0)
-           } , 350 + Math.random() * 300)
-         })
+        return new Promise((resolve) => {
+          setTimeout(() => {
+            resolve(typeof value === 'string' && value.length % 2 !== 0)
+          }, 350 + Math.random() * 300)
+        })
       }
     },
-    email : {
-      required ,
-      email ,
-      isUnique (value) {
+    email: {
+      required,
+      email,
+      isUnique(value) {
         if (value === '') return true
 
         var email_regex = /^(([^<>()[\]\\.,;:\s@"]+(\.[^<>()[\]\\.,;:\s@"]+)*)|(".+"))@((\[[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}\])|(([a-zA-Z\-0-9]+\.)+[a-zA-Z]{2,}))$/;
 
 
-
         return new Promise((resolve) => {
           setTimeout(() => {
             resolve(email_regex.test(value))
-          } , 350 + Math.random() * 300)
+          }, 350 + Math.random() * 300)
         })
       }
+    },
+    password: {
+      required,
+      minLength: minLength(8)
+    },
+    repeatpassword: {
+      sameAsPassword: sameAs('password')
     }
+  },
+  methods :{
+    toggleShowPassword () {
+      var show = document.getElementById('password')
+      if (this.showpassword == false ){
+        this.showpassword = true
+        show.type = 'text'
+      } else {
+        this.showpassword = false
+        show.type = 'password'
+      }
+    }
+
   }
 }
 </script>
