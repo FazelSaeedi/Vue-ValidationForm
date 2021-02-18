@@ -2,7 +2,7 @@
   <div class="card">
     <h3 class="card-header text-center">Register Area</h3>
     <div class="card-body">
-      <form>
+      <form @submit.prevent="submitForm">
         <div class="form-row">
           <div class="form-group  col-md-6">
             <label>First Name</label>
@@ -97,6 +97,33 @@
           </div>
 
 
+          <div class="form-group col-md-12">
+            <label>Phone</label>
+            <input type="number" class="form-control" v-model.trim="$v.phone.$model" :class="{
+                    'is-invalid' :$v.phone.$error , 'is-valid' : !$v.phone.$invalid }">
+            <div class="valid-feedback">Your Phone name is valid!</div>
+            <div class="invalid-feedback">
+              <span v-if="!$v.phone.required">Phone is required.</span>
+              <span v-if="!$v.phone.numeric">this Phone must be numeric</span>
+              <span v-if="!$v.phone.minLength">Your Password must be {{ $v.phone.$params.minLength.min }}</span>
+            </div>
+          </div>
+
+
+          <div class="form-group col-md-12">
+            <label>Website</label>
+
+            <input placeholder="http://www.example.com" type="url" class="form-control" v-model.trim="$v.url.$model" :class="{
+                    'is-invalid' :$v.url.$error , 'is-valid' : !$v.url.$invalid }">
+            <div class="valid-feedback">Your website  is valid!</div>
+            <div class="invalid-feedback">
+              <span v-if="!$v.url.required">website is required</span>
+              <span v-if="!$v.url.url">Website is invalid</span>
+            </div>
+          </div>
+
+
+        <button type="submit" class="btn btn-success">Submit {{submitstatus}}</button>
 
         </div>
       </form>
@@ -105,7 +132,7 @@
 </template>
 
 <script>
-import {required, minLength, maxLength, between , email , sameAs } from 'vuelidate/lib/validators'
+import {required, minLength, maxLength, between , email , sameAs , numeric , url } from 'vuelidate/lib/validators'
 
 
 export default {
@@ -119,7 +146,11 @@ export default {
       'email' : '' ,
       'password' : '' ,
       'repeatpassword' : '',
-      'showpassword' : false
+      'showpassword' : false ,
+      'phone' : '' ,
+      'url' : '' ,
+      'submitstatus' : null ,
+
     }
   },
   validations: {
@@ -170,6 +201,15 @@ export default {
     },
     repeatpassword: {
       sameAsPassword: sameAs('password')
+    } ,
+    phone : {
+      required ,
+      numeric ,
+      minLength : minLength(11) ,
+    } ,
+    url :{
+      required ,
+      url
     }
   },
   methods :{
@@ -182,8 +222,17 @@ export default {
         this.showpassword = false
         show.type = 'password'
       }
-    }
+    } ,
+    submitForm () {
 
+      this.$v.$touch()
+
+      if (this.$v.$invalid){
+        this.submitstatus = "FAIL"
+      } else {
+        this.submitstatus = "SUCCESS"
+      }
+    }
   }
 }
 </script>
